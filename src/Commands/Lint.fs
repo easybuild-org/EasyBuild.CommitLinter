@@ -88,5 +88,5 @@ type LintCommand() =
                     AnsiConsole.MarkupLine("[green]Success:[/] Commit message is valid.")
                     0
                 | Error error ->
-                    AnsiConsole.MarkupLine($"[red]Error:[/]\n\n{Markup.Escape(error)}")
+                    AnsiConsole.MarkupLine($"[red]Error:[/] {Markup.Escape(error)}")
                     1
