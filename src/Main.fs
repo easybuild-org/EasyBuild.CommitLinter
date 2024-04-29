@@ -8,14 +8,20 @@ let main args =
 
     let app = CommandApp<LintCommand>()
 
-    app.Configure(fun config ->
-        config.Settings.ApplicationName <- "commit-linter"
+    app
+        .WithDescription(
+            "Lint your commit message based on EasyBuild.CommitLinter conventions
 
-        config
-            .AddCommand<LintCommand>("lint")
-            .WithDescription("Lint your commit message")
-            .IsHidden()
-        |> ignore
-    )
+Learn more at https://github.com/easybuild-org/EasyBuild.CommitLinter"
+        )
+        .Configure(fun config ->
+            config.Settings.ApplicationName <- "commit-linter"
+
+            config
+                .AddCommand<LintCommand>("lint")
+                .WithDescription("Lint your commit message")
+                .IsHidden()
+            |> ignore
+        )
 
     app.Run(args)
