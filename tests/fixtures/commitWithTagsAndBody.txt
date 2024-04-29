@@ -1,0 +1,5 @@
+feat: Add a new feature
+
+[cli]
+
+This is the body

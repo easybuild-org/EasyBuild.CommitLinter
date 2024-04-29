@@ -1,0 +1,8 @@
+{
+    "types": [
+        {
+            "name": "feature",
+            "description": "A new feature"
+        }
+    ]
+}
