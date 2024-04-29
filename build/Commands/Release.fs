@@ -10,8 +10,7 @@ open System
 open System.IO
 open BlackFox.CommandLine
 open EasyBuild.Utils.Dotnet
-open EasyBuild.Commands.Demo
-open EasyBuild.Commands.Publish
+open EasyBuild.Commands.Test
 
 type Type =
     | Feat
@@ -175,7 +174,7 @@ type ReleaseCommand() =
             0
         else
 
-            DemoCommand().Execute(context, DemoSettings()) |> ignore
+            TestCommand().Execute(context, TestSettings()) |> ignore
 
             let lastChangelogVersion = Changelog.tryGetLastVersion Workspace.``CHANGELOG.md``
 
