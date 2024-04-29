@@ -106,6 +106,33 @@ let tests =
                     0
             }
 
+            test "LintCommand.Execute works with relative file path for the commit file" {
+                let actual =
+                    LintCommand()
+                        .Execute(
+                            null,
+                            LintSettings(
+                                CommitFile = "../../../fixtures/shortCommitOnly.txt"
+                            )
+                        )
+
+                Expect.equal actual 0
+            }
+
+            test "LintCommand.Execute works with relative file path for the config file" {
+                let actual =
+                    LintCommand()
+                        .Execute(
+                            null,
+                            LintSettings(
+                                CommitFile = Workspace.fixtures.``custom-type.txt``,
+                                Config = Some "../../../fixtures/custom-config.json"
+                            )
+                        )
+
+                Expect.equal actual 0
+            }
+
             test "LintCommand.Execute should return 1 when the commit file exists and is invalid" {
                 Expect.equal
                     (LintCommand()

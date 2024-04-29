@@ -31,6 +31,12 @@ type LintCommand() =
     let tryLoadConfig (settings: LintSettings) =
         match settings.Config with
         | Some configFile ->
+            let configFile =
+                if Path.IsPathFullyQualified(configFile) then
+                    configFile
+                else
+                    Path.Combine(Directory.GetCurrentDirectory(), configFile) |> Path.GetFullPath
+
             let configFile = FileInfo(configFile)
 
             if not configFile.Exists then
@@ -58,8 +64,14 @@ type LintCommand() =
 
     override __.Execute(context, settings) =
 
-        // TODO: Handle absolute paths and relative paths
-        let commitFile = FileInfo(settings.CommitFile)
+        let commitFilePath =
+            if Path.IsPathFullyQualified(settings.CommitFile) then
+                settings.CommitFile
+            else
+                Path.Combine(Directory.GetCurrentDirectory(), settings.CommitFile)
+                |> Path.GetFullPath
+
+        let commitFile = FileInfo(commitFilePath)
 
         if not commitFile.Exists then
             AnsiConsole.MarkupLine($"[red]Error:[/] File '{commitFile.FullName}' does not exist.")
