@@ -4,7 +4,7 @@ open Expecto
 open Expecto.NoMessage
 open CommitLinter
 
-let private opiniatedTagsConfig : Config.Config =
+let private opiniatedTagsConfig: Config.Config =
     {
         Types =
             [
@@ -341,15 +341,13 @@ feat: add new feature
 [tag1][tag2]
 -------------------------"
 
-                        let actual =
-                            ""
-                            |> Parser.validateTagLine opiniatedTagsConfig commitMessage
+                        let actual = "" |> Parser.validateTagLine opiniatedTagsConfig commitMessage
 
                         Expect.equal actual expected
                     }
 
-
-                    test "return an error if tag line is in an invalid format and the type is not flagged as 'SkipTagLine'" {
+                    test
+                        "return an error if tag line is in an invalid format and the type is not flagged as 'SkipTagLine'" {
                         let commitMessage: Parser.CommitMessage =
                             {
                                 Type = "feat"
@@ -379,51 +377,54 @@ feat: add new feature
                     }
                 ]
 
-            testList "validateCommitMessage" [
-                test "works for short commit message only" {
-                    let actual =
-                        "feat: add new feature"
-                        |> Parser.validateCommitMessage Config.defaultConfig
+            testList
+                "validateCommitMessage"
+                [
+                    test "works for short commit message only" {
+                        let actual =
+                            "feat: add new feature"
+                            |> Parser.validateCommitMessage Config.defaultConfig
 
-                    Expect.equal actual (Ok ())
-                }
+                        Expect.equal actual (Ok())
+                    }
 
-                test "works for commit message / tag line" {
-                    let actual =
-                        "feat: add new feature
+                    test "works for commit message / tag line" {
+                        let actual =
+                            "feat: add new feature
 
 [converter]"
-                        |> Parser.validateCommitMessage Config.defaultConfig
+                            |> Parser.validateCommitMessage Config.defaultConfig
 
-                    Expect.equal actual (Ok ())
-                }
+                        Expect.equal actual (Ok())
+                    }
 
-                test "works for commit message / tag line / body message" {
-                    let actual =
-                        "feat: add new feature
+                    test "works for commit message / tag line / body message" {
+                        let actual =
+                            "feat: add new feature
 
 [converter]
 
 This is the body message"
-                        |> Parser.validateCommitMessage Config.defaultConfig
+                            |> Parser.validateCommitMessage Config.defaultConfig
 
-                    Expect.equal actual (Ok ())
-                }
+                        Expect.equal actual (Ok())
+                    }
 
-                test "works for commit message / body message if tag line is not required" {
-                    let actual =
-                        "feat: add new feature
+                    test "works for commit message / body message if tag line is not required" {
+                        let actual =
+                            "feat: add new feature
 
 This is the body message"
 
-                        |> Parser.validateCommitMessage Config.defaultConfig
+                            |> Parser.validateCommitMessage Config.defaultConfig
 
-                    Expect.equal actual (Ok ())
-                }
+                        Expect.equal actual (Ok())
+                    }
 
-                test "returns an error if an empty line is missing between the commit message and body" {
-                    let expected =
-                        "Invalid commit message format.
+                    test
+                        "returns an error if an empty line is missing between the commit message and body" {
+                        let expected =
+                            "Invalid commit message format.
 
 Expected an empty line after the commit message.
 
@@ -432,20 +433,21 @@ Example:
 feat: add new feature
 
 -------------------------"
-                        |> Error
+                            |> Error
 
-                    let actual =
-                        "feat: add new feature
+                        let actual =
+                            "feat: add new feature
 This is the body message"
 
-                        |> Parser.validateCommitMessage Config.defaultConfig
+                            |> Parser.validateCommitMessage Config.defaultConfig
 
-                    Expect.equal actual expected
-                }
+                        Expect.equal actual expected
+                    }
 
-                test "returns an error if an empty line is missing between the commit message and tag line" {
-                    let expected =
-                        "Invalid commit message format.
+                    test
+                        "returns an error if an empty line is missing between the commit message and tag line" {
+                        let expected =
+                            "Invalid commit message format.
 
 Expected an empty line after the commit message.
 
@@ -454,20 +456,20 @@ Example:
 feat: add new feature
 
 -------------------------"
-                        |> Error
+                            |> Error
 
-                    let actual =
-                        "feat: add new feature
+                        let actual =
+                            "feat: add new feature
 [converter]"
 
-                        |> Parser.validateCommitMessage Config.defaultConfig
+                            |> Parser.validateCommitMessage Config.defaultConfig
 
-                    Expect.equal actual expected
-                }
+                        Expect.equal actual expected
+                    }
 
-                test "returns an error if an empty line is missing after the tag line and body" {
-                    let expected =
-                        "Invalid commit message format.
+                    test "returns an error if an empty line is missing after the tag line and body" {
+                        let expected =
+                            "Invalid commit message format.
 
 Expected an empty line after the tag line.
 
@@ -478,18 +480,18 @@ feat: add new feature
 [tag1][tag2]
 
 -------------------------"
-                        |> Error
+                            |> Error
 
-                    let actual =
-                        "feat: add new feature
+                        let actual =
+                            "feat: add new feature
 
 [converter]
 This is the body message"
 
-                        |> Parser.validateCommitMessage Config.defaultConfig
+                            |> Parser.validateCommitMessage Config.defaultConfig
 
-                    Expect.equal actual expected
-                }
+                        Expect.equal actual expected
+                    }
 
-            ]
+                ]
         ]

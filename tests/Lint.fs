@@ -111,9 +111,7 @@ let tests =
                     LintCommand()
                         .Execute(
                             null,
-                            LintSettings(
-                                CommitFile = "../../../fixtures/shortCommitOnly.txt"
-                            )
+                            LintSettings(CommitFile = "../../../fixtures/shortCommitOnly.txt")
                         )
 
                 Expect.equal actual 0
