@@ -89,6 +89,10 @@ dotnet husky add commit-msg -c 'dotnet commit-linter "$1"'
 
 ## Configuration
 
+> [!WARNING]
+> This tool is still in beta and the configuration format can be subject to changes as it will be shared with 
+[EasyBuild.ChangelogGen configuration format](https://github.com/easybuild-org/EasyBuild.ChangelogGen/issues/1)
+
 EasyBuild.CommitLinter comes with a default configuration to validate your commit.
 
 The default configuration allows the following commit types with no tags required:
