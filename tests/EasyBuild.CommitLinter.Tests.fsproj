@@ -8,12 +8,12 @@
   <ItemGroup>
     <Compile Include="Expecto.Extensions.fs" />
     <Compile Include="Workspace.fs" />
-    <Compile Include="Parser.fs" />
     <Compile Include="Lint.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BlackFox.CommandLine" />
+    <PackageReference Include="EasyBuild.CommitParser" />
     <PackageReference Include="EasyBuild.FileSystemProvider" />
     <PackageReference Include="Expecto" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
