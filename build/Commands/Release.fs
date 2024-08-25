@@ -235,7 +235,7 @@ type ReleaseCommand() =
 
                 for commit in commitGroup do
                     let githubCommitUrl sha =
-                        $"https://github.com/easybuild-org/EasyBuild.FileSystemProvider/commit/%s{sha}"
+                        $"https://github.com/easybuild-org/EasyBuild.CommitLinter/commit/%s{sha}"
 
                     let shortSha = commit.Commit.Sha.Substring(0, 7)
                     let commitUrl = githubCommitUrl commit.Commit.Sha
