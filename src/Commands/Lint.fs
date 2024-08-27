@@ -1,12 +1,11 @@
-namespace CommitLinter.Commands
+module CommitLinter.Commands.Lint
 
 open Spectre.Console
 open Spectre.Console.Cli
 open System.ComponentModel
 open System.IO
+open CommitLinter.ConfigLoader
 open EasyBuild.CommitParser
-open Thoth.Json.Newtonsoft
-open EasyBuild.CommitParser.Types
 
 type LintSettings() =
     inherit CommandSettings()
@@ -21,45 +20,8 @@ type LintSettings() =
     // Spectre.Console.Cli makes this argument required thanks to '<...>` syntax
     member val CommitFile = "" with get, set
 
-[<RequireQualifiedAccess>]
-type LoadConfig =
-    | Failed
-    | Success of CommitParserConfig
-
 type LintCommand() =
     inherit Command<LintSettings>()
-
-    let tryLoadConfig (settings: LintSettings) =
-        match settings.Config with
-        | Some configFile ->
-            let configFile =
-                if Path.IsPathFullyQualified(configFile) then
-                    configFile
-                else
-                    Path.Combine(Directory.GetCurrentDirectory(), configFile) |> Path.GetFullPath
-
-            let configFile = FileInfo(configFile)
-
-            if not configFile.Exists then
-                AnsiConsole.MarkupLine(
-                    $"[red]Error:[/] Configuration file '{configFile.FullName}' does not exist."
-                )
-
-                LoadConfig.Failed
-            else
-
-                let configContent = File.ReadAllText(configFile.FullName)
-
-                match Decode.fromString CommitParserConfig.decoder configContent with
-                | Ok config -> config |> LoadConfig.Success
-                | Error error ->
-                    AnsiConsole.MarkupLine(
-                        $"[red]Error:[/] Failed to parse configuration file:\n\n{error}"
-                    )
-
-                    LoadConfig.Failed
-
-        | None -> CommitParserConfig.Default |> LoadConfig.Success
 
     interface ICommandLimiter<LintSettings>
 
@@ -81,7 +43,7 @@ type LintCommand() =
 
             let commitMessage = File.ReadAllText(commitFile.FullName)
 
-            match tryLoadConfig settings with
+            match tryLoadConfig settings.Config with
             | LoadConfig.Failed -> 1
             | LoadConfig.Success config ->
                 match Parser.tryValidateCommitMessage config commitMessage with

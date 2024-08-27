@@ -1,7 +1,8 @@
 ﻿module CommitLinter.Main
 
 open Spectre.Console.Cli
-open CommitLinter.Commands
+open CommitLinter.Commands.Lint
+open CommitLinter.Commands.Interactive
 
 [<EntryPoint>]
 let main args =
@@ -22,6 +23,12 @@ Learn more at https://github.com/easybuild-org/EasyBuild.CommitLinter"
                 .WithDescription("Lint your commit message")
                 .IsHidden()
             |> ignore
+
+            config
+                .AddCommand<InteractiveCommand>("interactive")
+                .WithDescription("Interactively create a commit message")
+            |> ignore
+
         )
 
     app.Run(args)
