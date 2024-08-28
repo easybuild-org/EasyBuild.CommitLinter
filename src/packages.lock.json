@@ -1,7 +1,7 @@
 {
   "version": 2,
   "dependencies": {
-    "net6.0": {
+    "net8.0": {
       "EasyBuild.CommitParser": {
         "type": "Direct",
         "requested": "[1.1.0, )",
@@ -27,6 +27,18 @@
           "Spectre.Console": "0.49.0"
         }
       },
+      "Terminal.Gui": {
+        "type": "Direct",
+        "requested": "[2.0.0-v2-develop.2214, )",
+        "resolved": "2.0.0-v2-develop.2214",
+        "contentHash": "xmwcxQPhbY7d3kCeyFS33r9dUPyi7NZqQiUFa8+WcO0PoWhkxdqeT0vsdVOl/WQVlovxL7N+hyFck4cLc00C2w==",
+        "dependencies": {
+          "ColorHelper": "[1.8.1, 2.0.0)",
+          "System.IO.Abstractions": "[21.0.22, 22.0.0)",
+          "System.Text.Json": "[8.0.4, 9.0.0)",
+          "Wcwidth": "[2.0.0, 3.0.0)"
+        }
+      },
       "Thoth.Json.Newtonsoft": {
         "type": "Direct",
         "requested": "[0.1.0, )",
@@ -38,6 +50,11 @@
           "Newtonsoft.Json": "13.0.1",
           "Thoth.Json.Core": "0.1.0"
         }
+      },
+      "ColorHelper": {
+        "type": "Transitive",
+        "resolved": "1.8.1",
+        "contentHash": "rblWXd/02TfwJjX53xEfQnbnDRKxCm09VtavV8JaIcmIFWt9efNf6xTQ3WeXgy/she5R31eRTtnizFoUoDrs5w=="
       },
       "Fable.Core": {
         "type": "Transitive",
@@ -54,6 +71,41 @@
         "resolved": "0.49.0",
         "contentHash": "1s+hhYq5fcrqCvZhrNOPehAmCZJM6cjro85g1Qirvmm1tys+/sfFJgePCGcxr+S/nONZ/lCDTflPda3C+WlBdg=="
       },
+      "System.IO.Abstractions": {
+        "type": "Transitive",
+        "resolved": "21.0.22",
+        "contentHash": "DRnFyMIjO1KG9fqUPKV7XDPgECEwrNpsb3OLD0mImViVpRZ5747o7vqrOYbn9AMaQ8eajLeKH0fXQglgH7v42A==",
+        "dependencies": {
+          "TestableIO.System.IO.Abstractions": "21.0.22",
+          "TestableIO.System.IO.Abstractions.Wrappers": "21.0.22"
+        }
+      },
+      "System.Text.Encodings.Web": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "yev/k9GHAEGx2Rg3/tU6MQh4HGBXJs70y7j1LaM1i/ER9po+6nnQ6RRqTJn1E7Xu0fbIFK80Nh5EoODxrbxwBQ=="
+      },
+      "System.Text.Json": {
+        "type": "Transitive",
+        "resolved": "8.0.4",
+        "contentHash": "bAkhgDJ88XTsqczoxEMliSrpijKZHhbJQldhAmObj/RbrN3sU5dcokuXmWJWsdQAhiMJ9bTayWsL1C9fbbCRhw==",
+        "dependencies": {
+          "System.Text.Encodings.Web": "8.0.0"
+        }
+      },
+      "TestableIO.System.IO.Abstractions": {
+        "type": "Transitive",
+        "resolved": "21.0.22",
+        "contentHash": "yq3I8rUjNoo4JTOT3jbGfTM5VfowaSYiooDO2bfvQe6XGVyZiSIzaKyCmSnuUEyuktw6zzuVE1lJnUeDhJWtyQ=="
+      },
+      "TestableIO.System.IO.Abstractions.Wrappers": {
+        "type": "Transitive",
+        "resolved": "21.0.22",
+        "contentHash": "ETpw1B6VOsQ5zbfqxqLKjITnMvB9M0K5/bK8qJc6jih+tnlKQmtnnOPSS+OeKCqsZDYeHxPNp4ytQPJS3R+WXA==",
+        "dependencies": {
+          "TestableIO.System.IO.Abstractions": "21.0.22"
+        }
+      },
       "Thoth.Json.Core": {
         "type": "Transitive",
         "resolved": "0.1.0",
@@ -62,6 +114,11 @@
           "FSharp.Core": "5.0.0",
           "Fable.Core": "4.1.0"
         }
+      },
+      "Wcwidth": {
+        "type": "Transitive",
+        "resolved": "2.0.0",
+        "contentHash": "eGZYH/V+X1DwEXrPUlUcAp8pU5a38d8IvaQzq4pclJxF1x8bizssIo4uWc3qxmS64BNGK5WnDxyBYJz84+Msqg=="
       }
     }
   }

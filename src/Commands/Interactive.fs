@@ -79,8 +79,6 @@ module internal Prompt =
         TextPrompt<string>("Short message:") |> console.Prompt
 
     let description (console: IAnsiConsole) =
-        console.Clear()
-
         let description =
             TextPrompt<string>("Long description (optional): ", AllowEmpty = true)
             |> console.Prompt
@@ -163,28 +161,68 @@ let internal promptCommitMessage (console: IAnsiConsole) (commitConfig: CommitPa
         IsBreakingChange = Prompt.isBreakingChange console
     }
 
+open Terminal.Gui
+
+type InteractiveWindow() as this =
+    inherit Window()
+
+    do
+        this.Title <- $"Commit editor (%O{Application.QuitKey} to quit)"
+
+        let userNameLabel = new Label(Text = "Username: ")
+
+        let input =
+            new TextView(
+                Y = Pos.Bottom(userNameLabel) + Pos.op_Implicit 1,
+                Text =
+                    """Line 1
+Line 2""",
+                Width = Dim.Fill(),
+                Height = Dim.op_Implicit 10
+            )
+
+        input.ReadOnly <- true
+
+        // input.ba
+
+        let exitButton =
+            new Button(Text = "Exit", Y = Pos.Bottom(input) + Pos.op_Implicit 1)
+
+        exitButton.Accept.Add(fun _ -> Application.RequestStop())
+
+        this.Add(userNameLabel, input, exitButton)
+
 type InteractiveCommand() =
     inherit Command<InteractiveSettings>()
 
     interface ICommandLimiter<InteractiveSettings>
 
     override __.Execute(context, settings) =
-        // if settings.CommitFile
+        // printfn "%A" settings.CommitFile
 
-        match tryLoadConfig settings.Config with
-        | LoadConfig.Failed -> 1
-        | LoadConfig.Success config ->
-            let console = AnsiConsole.Console
+        // match tryLoadConfig settings.Config with
+        // | LoadConfig.Failed -> 1
+        // | LoadConfig.Success config ->
+        //     let console = AnsiConsole.Console
 
-            let commitMessageText = promptCommitMessage console config |> generateCommitMessage
+        //     let commitMessageText = promptCommitMessage console config |> generateCommitMessage
 
-            // Ask confirmation before shipping the commit
-            if not settings.SkipConfirmation then
-                // User rejected the commit
-                if not (Prompt.commitConfirmation console commitMessageText) then
-                    exit 1
+        //     // Ask confirmation before shipping the commit
+        //     if not settings.SkipConfirmation then
+        //         // User rejected the commit
+        //         if not (Prompt.commitConfirmation console commitMessageText) then
+        //             console.WriteLine("[red]Commit aborted[/]")
+        //             exit 1
 
-            // Write the commit message to the file
-            File.WriteAllText(settings.CommitFile, commitMessageText)
+        //     // Write the commit message to the file
+        //     File.WriteAllText(settings.CommitFile, commitMessageText)
 
-            0
+        //     0
+
+        // Application.QuitKey <- Key.C
+
+        Application.Init()
+        Application.Run<InteractiveWindow>() |> ignore
+        Application.Shutdown()
+
+        0
