@@ -23,87 +23,93 @@ type InteractiveSettings() =
     [<Description("Skip confirmation before shipping the commit")>]
     member val SkipConfirmation = false with get, set
 
-let private promptCommitType (config: CommitParserConfig) =
-    AnsiConsole.Clear()
+[<RequireQualifiedAccess>]
+module internal Prompt =
 
-    // Helper functions to convert between CommitType and string
-    let commitTypeToChoice (commitType: CommitType) =
-        match commitType.Description with
-        | Some description -> $"%s{commitType.Name} [grey]%s{description}[/]"
-        | None -> $"%s{commitType.Name}"
+    let commitType (console: IAnsiConsole) (config: CommitParserConfig) =
+        console.Clear()
 
-    // Helper function to convert (back) from a choice string to CommitType
-    let choiceToCommitType (choice: string) =
-        config.Types
-        |> List.find (fun commitType -> commitTypeToChoice commitType = choice)
+        // Helper functions to convert between CommitType and string
+        let commitTypeToChoice (commitType: CommitType) =
+            match commitType.Description with
+            | Some description -> $"%s{commitType.Name} [grey]%s{description}[/]"
+            | None -> $"%s{commitType.Name}"
 
-    let prompt = SelectionPrompt<string>(Title = "Select the type of commit")
+        // Helper function to convert (back) from a choice string to CommitType
+        let choiceToCommitType (choice: string) =
+            config.Types
+            |> List.find (fun commitType -> commitTypeToChoice commitType = choice)
 
-    let choices = config.Types |> List.map commitTypeToChoice |> Array.ofList
+        let prompt = SelectionPrompt<string>(Title = "Select the type of commit")
 
-    choices |> prompt.AddChoices |> AnsiConsole.Prompt |> choiceToCommitType
+        let choices = config.Types |> List.map commitTypeToChoice |> Array.ofList
 
-let private promptCommitTags (config: CommitParserConfig) (commitType: CommitType) =
-    AnsiConsole.Clear()
+        choices |> prompt.AddChoices |> console.Prompt |> choiceToCommitType
 
-    if commitType.SkipTagLine then
-        None
-    else
-        match config.Tags with
-        | None ->
-            AnsiConsole.MarkupLine("[red]Error:[/] No tags defined in the configuration file.")
-            exit 1
+    let commitTags (console: IAnsiConsole) (config: CommitParserConfig) (commitType: CommitType) =
+        console.Clear()
 
-        | Some tags ->
-            let instructionsText =
-                [
-                    "[grey](Multiple tags can be selected)[/]"
-                    "[grey](Press [blue]<up>[/] and [blue]<down>[/] to navigate, [blue]<space>[/] to toggle a tag, [green]<enter>[/] to accept)[/]"
-                ]
-                |> String.concat "\n"
+        if commitType.SkipTagLine then
+            None
+        else
+            match config.Tags with
+            | None ->
+                console.MarkupLine("[red]Error:[/] No tags defined in the configuration file.")
+                exit 1
 
-            let prompt =
-                MultiSelectionPrompt<string>(
-                    Title = "Select tags",
-                    InstructionsText = instructionsText
-                )
+            | Some tags ->
+                let instructionsText =
+                    [
+                        "[grey](Multiple tags can be selected)[/]"
+                        "[grey](Press [blue]<up>[/] and [blue]<down>[/] to navigate, [blue]<space>[/] to toggle a tag, [green]<enter>[/] to accept)[/]"
+                    ]
+                    |> String.concat "\n"
 
-            tags |> prompt.AddChoices |> AnsiConsole.Prompt |> Seq.toList |> Some
+                let prompt =
+                    MultiSelectionPrompt<string>(
+                        Title = "Select tags",
+                        InstructionsText = instructionsText
+                    )
 
-let private promptShortMessage () =
-    AnsiConsole.Clear()
+                tags |> prompt.AddChoices |> console.Prompt |> Seq.toList |> Some
 
-    TextPrompt<string>("Short message:") |> AnsiConsole.Prompt
+    let shortMessage (console: IAnsiConsole) =
+        console.Clear()
 
-let private promptDescription () =
-    AnsiConsole.Clear()
+        TextPrompt<string>("Short message:") |> console.Prompt
 
-    let description =
-        TextPrompt<string>("Long description (optional): ", AllowEmpty = true)
-        |> AnsiConsole.Prompt
+    let description (console: IAnsiConsole) =
+        console.Clear()
 
-    if String.IsNullOrWhiteSpace description then
-        None
-    else
-        Some description
+        let description =
+            TextPrompt<string>("Long description (optional): ", AllowEmpty = true)
+            |> console.Prompt
 
-let private promptIsBreakingChange () =
-    AnsiConsole.Clear()
+        if String.IsNullOrWhiteSpace description then
+            None
+        else
+            Some description
 
-    let prompt = ConfirmationPrompt("Is this a breaking change?", DefaultValue = false)
+    let isBreakingChange (console: IAnsiConsole) =
+        console.Clear()
 
-    prompt |> AnsiConsole.Prompt
+        let prompt = ConfirmationPrompt("Is this a breaking change?", DefaultValue = false)
 
-let private promptCommitConfirmation (commitMessage: string) =
-    AnsiConsole.Clear()
+        prompt |> console.Prompt
 
-    AnsiConsole.MarkupLine "=== Commit message ==="
+    let commitConfirmation (console: IAnsiConsole) (commitMessage: string) =
+        console.Clear()
 
-    commitMessage |> StringExtensions.EscapeMarkup |> AnsiConsole.MarkupLine
+        let headerRule = Rule("Commit message preview")
+        headerRule.Justification <- Justify.Left
 
-    AnsiConsole.MarkupLine "=== End of commit message ==="
+        console.Write(headerRule)
 
-    ConfirmationPrompt("Is this commit message correct?") |> AnsiConsole.Prompt
+        commitMessage |> StringExtensions.EscapeMarkup |> console.MarkupLine
+
+        console.Write(Rule())
+
+        ConfirmationPrompt("Submit the commit?") |> console.Prompt
 
 type CommitMessageConfig =
     {
@@ -114,7 +120,7 @@ type CommitMessageConfig =
         IsBreakingChange: bool
     }
 
-let private generateCommitMessage (config: CommitMessageConfig) =
+let internal generateCommitMessage (config: CommitMessageConfig) =
     let breakingChangeSuffix =
         if config.IsBreakingChange then
             "!"
@@ -125,7 +131,7 @@ let private generateCommitMessage (config: CommitMessageConfig) =
 
     [
         $"%s{config.CommitType.Name}%s{breakingChangeSuffix}: %s{config.ShortMessage}"
-        newLine ()
+        newLine () // Empty line
 
         // Tags:
         // [tag1][tag2][tag3]
@@ -133,15 +139,29 @@ let private generateCommitMessage (config: CommitMessageConfig) =
         | Some tags ->
             newLine ()
             tags |> List.map (fun tag -> $"[%s{tag}]") |> String.concat ""
+            newLine ()
         | None -> ""
 
         match config.Description with
         | Some longDescription ->
             newLine ()
             longDescription
+            newLine ()
         | None -> ""
     ]
     |> String.concat ""
+
+let internal promptCommitMessage (console: IAnsiConsole) (commitConfig: CommitParserConfig) =
+    let commitType = Prompt.commitType console commitConfig
+
+    {
+        CommitType = commitType
+        Tags = Prompt.commitTags console commitConfig commitType
+        ShortMessage = Prompt.shortMessage console
+        Description = Prompt.description console
+        // Breaking change are only allowed for certain commit types?
+        IsBreakingChange = Prompt.isBreakingChange console
+    }
 
 type InteractiveCommand() =
     inherit Command<InteractiveSettings>()
@@ -154,23 +174,14 @@ type InteractiveCommand() =
         match tryLoadConfig settings.Config with
         | LoadConfig.Failed -> 1
         | LoadConfig.Success config ->
-            let commitMessageText =
-                let commitType = promptCommitType config
+            let console = AnsiConsole.Console
 
-                {
-                    CommitType = commitType
-                    Tags = promptCommitTags config commitType
-                    ShortMessage = promptShortMessage ()
-                    Description = promptDescription ()
-                    // Breaking change are only allowed for certain commit types?
-                    IsBreakingChange = promptIsBreakingChange ()
-                }
-                |> generateCommitMessage
+            let commitMessageText = promptCommitMessage console config |> generateCommitMessage
 
             // Ask confirmation before shipping the commit
             if not settings.SkipConfirmation then
                 // User rejected the commit
-                if not (promptCommitConfirmation commitMessageText) then
+                if not (Prompt.commitConfirmation console commitMessageText) then
                     exit 1
 
             // Write the commit message to the file

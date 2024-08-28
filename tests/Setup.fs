@@ -23,4 +23,15 @@ type TestModuleDiscovery() =
 type TestProject() =
     interface ITestProject with
         member _.Configure(configuration: TestConfiguration, environment: TestEnvironment) =
-            configuration.Conventions.Add<TestModuleDiscovery, DefaultExecution>()
+            VerifyTests.VerifierSettings.AssignTargetAssembly(environment.Assembly)
+            configuration.Conventions.Add<TestModuleDiscovery, TestProject>()
+
+    interface IExecution with
+        member _.Run(testSuite: TestSuite) =
+            task {
+                for testClass in testSuite.TestClasses do
+                    for test in testClass.Tests do
+                        use _ = VerifyFixie.ExecutionState.Set(testClass, test, null)
+                        let! _ = test.Run()
+                        ()
+            }

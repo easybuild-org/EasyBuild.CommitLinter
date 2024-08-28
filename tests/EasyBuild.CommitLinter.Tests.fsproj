@@ -8,15 +8,21 @@
     <ItemGroup>
         <Compile Include="Workspace.fs" />
         <Compile Include="Setup.fs" />
+        <Compile Include="Expect.fs" />
+        <Compile Include="Extensions/Verify.fs" />
         <Compile Include="Lint.fs" />
+        <Compile Include="Interactive.fs" />
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Argon.FSharp" />
         <PackageReference Include="BlackFox.CommandLine" />
         <PackageReference Include="EasyBuild.CommitParser" />
         <PackageReference Include="EasyBuild.FileSystemProvider" />
-        <PackageReference Include="Faqt" />
         <PackageReference Include="Fixie.TestAdapter" />
+        <PackageReference Include="Spectre.Console.Testing" />
+        <PackageReference Include="Verify.Fixie" />
+        <PackageReference Update="FSharp.Core" VersionOverride="8.0.301" />
     </ItemGroup>
 
     <ItemGroup>

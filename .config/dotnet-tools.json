@@ -13,6 +13,12 @@
       "commands": [
         "husky"
       ]
+    },
+    "verify.tool": {
+      "version": "0.6.0",
+      "commands": [
+        "dotnet-verify"
+      ]
     }
   }
 }
