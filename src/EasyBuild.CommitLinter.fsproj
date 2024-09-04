@@ -20,10 +20,17 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Avalonia.Desktop" />
+        <PackageReference Include="Avalonia.FuncUI" />
+        <PackageReference Include="Avalonia.Themes.Fluent" />
         <PackageReference Include="EasyBuild.CommitParser" />
         <PackageReference Include="Spectre.Console.Cli" />
         <PackageReference Include="Terminal.Gui" />
         <PackageReference Include="Thoth.Json.Newtonsoft" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Resources\config.json" />
     </ItemGroup>
 
 </Project>

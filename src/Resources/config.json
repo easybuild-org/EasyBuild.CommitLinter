@@ -1,0 +1,4 @@
+{
+    "$schema": "https://raw.githubusercontent.com/gui-cs/Terminal.Gui/v2_develop/docfx/schemas/tui-config-schema.json",
+    "Theme": "Default"
+}

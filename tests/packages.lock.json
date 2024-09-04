@@ -79,6 +79,11 @@
         "resolved": "0.21.0",
         "contentHash": "c515pzYDOmF3o8TywrIsTjxbc5KJwSdZW3I7JkhhduLz15wAlxo53nLg2UnD+dqTAT838LcuawRNgneK83A30Q=="
       },
+      "ColorHelper": {
+        "type": "Transitive",
+        "resolved": "1.8.1",
+        "contentHash": "rblWXd/02TfwJjX53xEfQnbnDRKxCm09VtavV8JaIcmIFWt9efNf6xTQ3WeXgy/she5R31eRTtnizFoUoDrs5w=="
+      },
       "DiffEngine": {
         "type": "Transitive",
         "resolved": "15.5.0",
@@ -145,14 +150,6 @@
         "resolved": "13.0.1",
         "contentHash": "ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A=="
       },
-      "NStack.Core": {
-        "type": "Transitive",
-        "resolved": "1.1.1",
-        "contentHash": "5LhlYsmAe3A55zl8xCSD7AbuhDqZODpsfdMGgtygeBlHZmlb0tHmK5/PeKODnwYUhC6EbL2qHKGskPNvpY+z3w==",
-        "dependencies": {
-          "System.ValueTuple": "4.5.0"
-        }
-      },
       "NuGet.Frameworks": {
         "type": "Transitive",
         "resolved": "6.5.0",
@@ -173,6 +170,15 @@
         "resolved": "8.0.0",
         "contentHash": "WTlRjL6KWIMr/pAaq3rYqh0TJlzpouaQ/W1eelssHgtlwHAH25jXTkUphTYx9HaIIf7XA6qs/0+YhtLEQRkJ+Q=="
       },
+      "System.IO.Abstractions": {
+        "type": "Transitive",
+        "resolved": "21.0.22",
+        "contentHash": "DRnFyMIjO1KG9fqUPKV7XDPgECEwrNpsb3OLD0mImViVpRZ5747o7vqrOYbn9AMaQ8eajLeKH0fXQglgH7v42A==",
+        "dependencies": {
+          "TestableIO.System.IO.Abstractions": "21.0.22",
+          "TestableIO.System.IO.Abstractions.Wrappers": "21.0.22"
+        }
+      },
       "System.IO.Hashing": {
         "type": "Transitive",
         "resolved": "8.0.0",
@@ -191,10 +197,31 @@
         "resolved": "1.6.0",
         "contentHash": "COC1aiAJjCoA5GBF+QKL2uLqEBew4JsCkQmoHKbN3TlOZKa2fKLz5CpiRQKDz0RsAOEGsVKqOD5bomsXq/4STQ=="
       },
-      "System.ValueTuple": {
+      "System.Text.Encodings.Web": {
         "type": "Transitive",
-        "resolved": "4.5.0",
-        "contentHash": "okurQJO6NRE/apDIP23ajJ0hpiNmJ+f0BwOlB/cSqTLQlw5upkf+5+96+iG2Jw40G1fCVCyPz/FhIABUjMR+RQ=="
+        "resolved": "8.0.0",
+        "contentHash": "yev/k9GHAEGx2Rg3/tU6MQh4HGBXJs70y7j1LaM1i/ER9po+6nnQ6RRqTJn1E7Xu0fbIFK80Nh5EoODxrbxwBQ=="
+      },
+      "System.Text.Json": {
+        "type": "Transitive",
+        "resolved": "8.0.4",
+        "contentHash": "bAkhgDJ88XTsqczoxEMliSrpijKZHhbJQldhAmObj/RbrN3sU5dcokuXmWJWsdQAhiMJ9bTayWsL1C9fbbCRhw==",
+        "dependencies": {
+          "System.Text.Encodings.Web": "8.0.0"
+        }
+      },
+      "TestableIO.System.IO.Abstractions": {
+        "type": "Transitive",
+        "resolved": "21.0.22",
+        "contentHash": "yq3I8rUjNoo4JTOT3jbGfTM5VfowaSYiooDO2bfvQe6XGVyZiSIzaKyCmSnuUEyuktw6zzuVE1lJnUeDhJWtyQ=="
+      },
+      "TestableIO.System.IO.Abstractions.Wrappers": {
+        "type": "Transitive",
+        "resolved": "21.0.22",
+        "contentHash": "ETpw1B6VOsQ5zbfqxqLKjITnMvB9M0K5/bK8qJc6jih+tnlKQmtnnOPSS+OeKCqsZDYeHxPNp4ytQPJS3R+WXA==",
+        "dependencies": {
+          "TestableIO.System.IO.Abstractions": "21.0.22"
+        }
       },
       "Thoth.Json.Core": {
         "type": "Transitive",
@@ -216,13 +243,18 @@
           "System.IO.Hashing": "8.0.0"
         }
       },
+      "Wcwidth": {
+        "type": "Transitive",
+        "resolved": "2.0.0",
+        "contentHash": "eGZYH/V+X1DwEXrPUlUcAp8pU5a38d8IvaQzq4pclJxF1x8bizssIo4uWc3qxmS64BNGK5WnDxyBYJz84+Msqg=="
+      },
       "easybuild.commitlinter": {
         "type": "Project",
         "dependencies": {
           "EasyBuild.CommitParser": "[1.1.0, )",
           "FSharp.Core": "[5.0.2, )",
           "Spectre.Console.Cli": "[0.49.0, )",
-          "Terminal.Gui": "[1.17.1, )",
+          "Terminal.Gui": "[2.0.0-v2-develop.2329, )",
           "Thoth.Json.Newtonsoft": "[0.1.0, )"
         }
       },
@@ -237,12 +269,14 @@
       },
       "Terminal.Gui": {
         "type": "CentralTransitive",
-        "requested": "[1.17.1, )",
-        "resolved": "1.17.1",
-        "contentHash": "jKw0FzRZXFh6SWXQoTM7y098QjIvTNi6JzJyNkIo+IHzRlfOF85a1U9mmOKDoYVFFIV/wKGO5ZvQE2gy6BVA5Q==",
+        "requested": "[2.0.0-v2-develop.2329, )",
+        "resolved": "2.0.0-v2-develop.2329",
+        "contentHash": "1WRHeZKN5tnF8DUu0vHz5pGZIY9ETwufKbUHCoH3UTcIeOlduhRCpBhTyJWri/fePsUkij2euFMGX2yHfk4h/A==",
         "dependencies": {
-          "NStack.Core": "1.1.1",
-          "System.Management": "8.0.0"
+          "ColorHelper": "[1.8.1, 2.0.0)",
+          "System.IO.Abstractions": "[21.0.22, 22.0.0)",
+          "System.Text.Json": "[8.0.4, 9.0.0)",
+          "Wcwidth": "[2.0.0, 3.0.0)"
         }
       },
       "Thoth.Json.Newtonsoft": {

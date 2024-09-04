@@ -23,91 +23,91 @@ type InteractiveSettings() =
     [<Description("Skip confirmation before shipping the commit")>]
     member val SkipConfirmation = false with get, set
 
-[<RequireQualifiedAccess>]
-module internal Prompt =
+// [<RequireQualifiedAccess>]
+// module internal Prompt =
 
-    let commitType (console: IAnsiConsole) (config: CommitParserConfig) =
-        console.Clear()
+//     let commitType (console: IAnsiConsole) (config: CommitParserConfig) =
+//         console.Clear()
 
-        // Helper functions to convert between CommitType and string
-        let commitTypeToChoice (commitType: CommitType) =
-            match commitType.Description with
-            | Some description -> $"%s{commitType.Name} [grey]%s{description}[/]"
-            | None -> $"%s{commitType.Name}"
+//         // Helper functions to convert between CommitType and string
+//         let commitTypeToChoice (commitType: CommitType) =
+//             match commitType.Description with
+//             | Some description -> $"%s{commitType.Name} [grey]%s{description}[/]"
+//             | None -> $"%s{commitType.Name}"
 
-        // Helper function to convert (back) from a choice string to CommitType
-        let choiceToCommitType (choice: string) =
-            config.Types
-            |> List.find (fun commitType -> commitTypeToChoice commitType = choice)
+//         // Helper function to convert (back) from a choice string to CommitType
+//         let choiceToCommitType (choice: string) =
+//             config.Types
+//             |> List.find (fun commitType -> commitTypeToChoice commitType = choice)
 
-        let prompt = SelectionPrompt<string>(Title = "Select the type of commit")
+//         let prompt = SelectionPrompt<string>(Title = "Select the type of commit")
 
-        let choices = config.Types |> List.map commitTypeToChoice |> Array.ofList
+//         let choices = config.Types |> List.map commitTypeToChoice |> Array.ofList
 
-        choices |> prompt.AddChoices |> console.Prompt |> choiceToCommitType
+//         choices |> prompt.AddChoices |> console.Prompt |> choiceToCommitType
 
-    let commitTags (console: IAnsiConsole) (config: CommitParserConfig) (commitType: CommitType) =
-        console.Clear()
+//     let commitTags (console: IAnsiConsole) (config: CommitParserConfig) (commitType: CommitType) =
+//         console.Clear()
 
-        if commitType.SkipTagLine then
-            None
-        else
-            match config.Tags with
-            | None ->
-                console.MarkupLine("[red]Error:[/] No tags defined in the configuration file.")
-                exit 1
+//         if commitType.SkipTagLine then
+//             None
+//         else
+//             match config.Tags with
+//             | None ->
+//                 console.MarkupLine("[red]Error:[/] No tags defined in the configuration file.")
+//                 exit 1
 
-            | Some tags ->
-                let instructionsText =
-                    [
-                        "[grey](Multiple tags can be selected)[/]"
-                        "[grey](Press [blue]<up>[/] and [blue]<down>[/] to navigate, [blue]<space>[/] to toggle a tag, [green]<enter>[/] to accept)[/]"
-                    ]
-                    |> String.concat "\n"
+//             | Some tags ->
+//                 let instructionsText =
+//                     [
+//                         "[grey](Multiple tags can be selected)[/]"
+//                         "[grey](Press [blue]<up>[/] and [blue]<down>[/] to navigate, [blue]<space>[/] to toggle a tag, [green]<enter>[/] to accept)[/]"
+//                     ]
+//                     |> String.concat "\n"
 
-                let prompt =
-                    MultiSelectionPrompt<string>(
-                        Title = "Select tags",
-                        InstructionsText = instructionsText
-                    )
+//                 let prompt =
+//                     MultiSelectionPrompt<string>(
+//                         Title = "Select tags",
+//                         InstructionsText = instructionsText
+//                     )
 
-                tags |> prompt.AddChoices |> console.Prompt |> Seq.toList |> Some
+//                 tags |> prompt.AddChoices |> console.Prompt |> Seq.toList |> Some
 
-    let shortMessage (console: IAnsiConsole) =
-        console.Clear()
+//     let shortMessage (console: IAnsiConsole) =
+//         console.Clear()
 
-        TextPrompt<string>("Short message:") |> console.Prompt
+//         TextPrompt<string>("Short message:") |> console.Prompt
 
-    let description (console: IAnsiConsole) =
-        let description =
-            TextPrompt<string>("Long description (optional): ", AllowEmpty = true)
-            |> console.Prompt
+//     let description (console: IAnsiConsole) =
+//         let description =
+//             TextPrompt<string>("Long description (optional): ", AllowEmpty = true)
+//             |> console.Prompt
 
-        if String.IsNullOrWhiteSpace description then
-            None
-        else
-            Some description
+//         if String.IsNullOrWhiteSpace description then
+//             None
+//         else
+//             Some description
 
-    let isBreakingChange (console: IAnsiConsole) =
-        console.Clear()
+//     let isBreakingChange (console: IAnsiConsole) =
+//         console.Clear()
 
-        let prompt = ConfirmationPrompt("Is this a breaking change?", DefaultValue = false)
+//         let prompt = ConfirmationPrompt("Is this a breaking change?", DefaultValue = false)
 
-        prompt |> console.Prompt
+//         prompt |> console.Prompt
 
-    let commitConfirmation (console: IAnsiConsole) (commitMessage: string) =
-        console.Clear()
+//     let commitConfirmation (console: IAnsiConsole) (commitMessage: string) =
+//         console.Clear()
 
-        let headerRule = Rule("Commit message preview")
-        headerRule.Justification <- Justify.Left
+//         let headerRule = Rule("Commit message preview")
+//         headerRule.Justification <- Justify.Left
 
-        console.Write(headerRule)
+//         console.Write(headerRule)
 
-        commitMessage |> StringExtensions.EscapeMarkup |> console.MarkupLine
+//         commitMessage |> StringExtensions.EscapeMarkup |> console.MarkupLine
 
-        console.Write(Rule())
+//         console.Write(Rule())
 
-        ConfirmationPrompt("Submit the commit?") |> console.Prompt
+//         ConfirmationPrompt("Submit the commit?") |> console.Prompt
 
 type CommitMessageConfig =
     {
@@ -149,48 +149,145 @@ let internal generateCommitMessage (config: CommitMessageConfig) =
     ]
     |> String.concat ""
 
-let internal promptCommitMessage (console: IAnsiConsole) (commitConfig: CommitParserConfig) =
-    let commitType = Prompt.commitType console commitConfig
+// let internal promptCommitMessage (console: IAnsiConsole) (commitConfig: CommitParserConfig) =
+//     let commitType = Prompt.commitType console commitConfig
 
-    {
-        CommitType = commitType
-        Tags = Prompt.commitTags console commitConfig commitType
-        ShortMessage = Prompt.shortMessage console
-        Description = Prompt.description console
-        // Breaking change are only allowed for certain commit types?
-        IsBreakingChange = Prompt.isBreakingChange console
-    }
+//     {
+//         CommitType = commitType
+//         Tags = Prompt.commitTags console commitConfig commitType
+//         ShortMessage = Prompt.shortMessage console
+//         Description = Prompt.description console
+//         // Breaking change are only allowed for certain commit types?
+//         IsBreakingChange = Prompt.isBreakingChange console
+//     }
 
 open Terminal.Gui
 
-type InteractiveWindow() as this =
+// type InteractiveWindow(config: CommitParserConfig) as this =
+//     inherit Window()
+
+//     let promptCommitType (config: CommitParserConfig) =
+//         let step = new WizardStep()
+
+//         let commitTypeLabel = new Label(Text = "Select the type of commit")
+
+//         let listOfCommitTypes =
+//             config.Types |> List.map (fun commitType -> commitType.Name) |> Array.ofList
+
+//         let choices =
+//             new RadioGroup(X = 1, Y = Pos.Bottom(commitTypeLabel), RadioLabels = listOfCommitTypes)
+
+//         choices.SelectedItemChanged.Add(fun _ ->
+//             InteractiveWindow.CommitType <-
+//                 config.Types
+//                 |> List.find (fun commitType ->
+//                     commitType.Name = choices.RadioLabels[choices.SelectedItem]
+//                 )
+//         )
+
+//         choices.SetFocus()
+//         step.SetFocus()
+//         step.Add(commitTypeLabel, choices)
+//         step
+
+//     do
+//         this.Title <- $"Commit editor (%O{Application.QuitKey} to quit)"
+
+//         let wizard = new Wizard()
+
+//         wizard.AddStep(promptCommitType config) |> ignore
+
+//         wizard.Finished.Add(fun _ -> Application.RequestStop())
+//         wizard.Modal <- false
+//         // wizard.NextFinishButton.
+
+//         this.Add(wizard) |> ignore
+
+//     //         let userNameLabel = new Label(Text = "Username: ")
+
+//     //         let input =
+//     //             new TextView(
+//     //                 Y = Pos.Bottom(userNameLabel) + Pos.op_Implicit 1,
+//     //                 Text =
+//     //                     """Line 1
+//     // Line 2""",
+//     //                 Width = Dim.Fill(),
+//     //                 Height = Dim.op_Implicit 10
+//     //             )
+
+//     //         input.ReadOnly <- true
+//     //         input.SetFocus()
+
+//     //         let wizard = new Wizard()
+
+//     //         // wizard.ColorScheme <- p
+
+//     //         let step1 = new WizardStep()
+//     //         step1.Add(userNameLabel) |> ignore
+
+//     //         let step2 = new WizardStep()
+//     //         step2.Add(userNameLabel, input) |> ignore
+
+//     //         wizard.AddStep(step1) |> ignore
+//     //         wizard.AddStep(step2) |> ignore
+
+//     //         // Remove the wizard when it's done
+//     //         wizard.Finished.Add(fun _ ->
+//     //             this.Remove(wizard) |> ignore
+//     //         )
+
+//     //         let exitButton =
+//     //             new Button(Text = "Exit", Y = Pos.Bottom(input) + Pos.op_Implicit 1)
+
+//     //         exitButton.Accept.Add(fun _ -> Application.RequestStop())
+
+//     //         this.Add(wizard) |> ignore
+
+//     static member val CommitType = Unchecked.defaultof<CommitType> with get, set
+
+type InteractiveWindow(config: CommitParserConfig) as this =
     inherit Window()
+
+    let mutable firstStep = new WizardStep()
+    let mutable choices = Unchecked.defaultof<RadioGroup>
+
+    let promptCommitType (config: CommitParserConfig) =
+
+        let commitTypeLabel = new Label(Text = "Select the type of commit")
+
+        let listOfCommitTypes =
+            [| "feat"; "fix"; "docs"; "style"; "refactor"; "perf"; "test"; "chore" |]
+
+        choices <-
+            new RadioGroup(X = 1, Y = Pos.Bottom(commitTypeLabel), RadioLabels = listOfCommitTypes)
+
+        choices.SelectedItemChanged.Add(fun _ ->
+            InteractiveWindow.CommitType <- choices.RadioLabels[choices.SelectedItem]
+        )
+
+        // Force focus on the radio group for faster
+        // choices.SetFocus()
+
+        firstStep.Add(commitTypeLabel, choices)
+        firstStep
 
     do
         this.Title <- $"Commit editor (%O{Application.QuitKey} to quit)"
 
-        let userNameLabel = new Label(Text = "Username: ")
+        let wizard = new Wizard()
 
-        let input =
-            new TextView(
-                Y = Pos.Bottom(userNameLabel) + Pos.op_Implicit 1,
-                Text =
-                    """Line 1
-Line 2""",
-                Width = Dim.Fill(),
-                Height = Dim.op_Implicit 10
-            )
+        wizard.AddStep(promptCommitType config) |> ignore
 
-        input.ReadOnly <- true
+        wizard.Finished.Add(fun _ -> Application.RequestStop())
 
-        // input.ba
+        wizard.StepChanged.Add(fun args ->
+            if args.NewStep = firstStep then
+                choices.SetFocus() |> ignore
+        )
 
-        let exitButton =
-            new Button(Text = "Exit", Y = Pos.Bottom(input) + Pos.op_Implicit 1)
+        this.Add(wizard) |> ignore
 
-        exitButton.Accept.Add(fun _ -> Application.RequestStop())
-
-        this.Add(userNameLabel, input, exitButton)
+    static member val CommitType = "You should not see this text" with get, set
 
 type InteractiveCommand() =
     inherit Command<InteractiveSettings>()
@@ -200,29 +297,32 @@ type InteractiveCommand() =
     override __.Execute(context, settings) =
         // printfn "%A" settings.CommitFile
 
-        // match tryLoadConfig settings.Config with
-        // | LoadConfig.Failed -> 1
-        // | LoadConfig.Success config ->
-        //     let console = AnsiConsole.Console
+        match tryLoadConfig settings.Config with
+        | LoadConfig.Failed -> 1
+        | LoadConfig.Success config ->
+            // let console = AnsiConsole.Console
 
-        //     let commitMessageText = promptCommitMessage console config |> generateCommitMessage
+            // let commitMessageText = promptCommitMessage console config |> generateCommitMessage
 
-        //     // Ask confirmation before shipping the commit
-        //     if not settings.SkipConfirmation then
-        //         // User rejected the commit
-        //         if not (Prompt.commitConfirmation console commitMessageText) then
-        //             console.WriteLine("[red]Commit aborted[/]")
-        //             exit 1
+            Application.Init()
+            let app = new InteractiveWindow(config)
+            Application.Run app |> ignore
+            Application.Shutdown()
 
-        //     // Write the commit message to the file
-        //     File.WriteAllText(settings.CommitFile, commitMessageText)
+            printfn "%A" InteractiveWindow.CommitType
 
-        //     0
+            // // Ask confirmation before shipping the commit
+            // if not settings.SkipConfirmation then
+            //     // User rejected the commit
+            //     if not (Prompt.commitConfirmation console commitMessageText) then
+            //         console.WriteLine("[red]Commit aborted[/]")
+            //         exit 1
 
-        // Application.QuitKey <- Key.C
+            // // Write the commit message to the file
+            // File.WriteAllText(settings.CommitFile, commitMessageText)
 
-        Application.Init()
-        Application.Run<InteractiveWindow>() |> ignore
-        Application.Shutdown()
+            //     0
 
-        0
+            // Application.QuitKey <- Key.C
+
+            0
