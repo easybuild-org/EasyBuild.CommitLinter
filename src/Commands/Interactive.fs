@@ -1,4 +1,4 @@
-module CommitLinter.Commands.Interactive
+namespace CommitLinter.Commands.Interactive
 
 open System
 open System.IO
@@ -109,45 +109,45 @@ type InteractiveSettings() =
 
 //         ConfirmationPrompt("Submit the commit?") |> console.Prompt
 
-type CommitMessageConfig =
-    {
-        CommitType: CommitType
-        Tags: string list option
-        ShortMessage: string
-        Description: string option
-        IsBreakingChange: bool
-    }
+// type CommitMessageConfig =
+//     {
+//         mutable CommitType: CommitType
+//         mutable Tags: string list option
+//         mutable ShortMessage: string
+//         mutable Description: string option
+//         mutable IsBreakingChange: bool
+//     }
 
-let internal generateCommitMessage (config: CommitMessageConfig) =
-    let breakingChangeSuffix =
-        if config.IsBreakingChange then
-            "!"
-        else
-            ""
+// let internal generateCommitMessage (config: CommitMessageConfig) =
+//     let breakingChangeSuffix =
+//         if config.IsBreakingChange then
+//             "!"
+//         else
+//             ""
 
-    let inline newLine () = "\n"
+//     let inline newLine () = "\n"
 
-    [
-        $"%s{config.CommitType.Name}%s{breakingChangeSuffix}: %s{config.ShortMessage}"
-        newLine () // Empty line
+//     [
+//         $"%s{config.CommitType.Name}%s{breakingChangeSuffix}: %s{config.ShortMessage}"
+//         newLine () // Empty line
 
-        // Tags:
-        // [tag1][tag2][tag3]
-        match config.Tags with
-        | Some tags ->
-            newLine ()
-            tags |> List.map (fun tag -> $"[%s{tag}]") |> String.concat ""
-            newLine ()
-        | None -> ""
+//         // Tags:
+//         // [tag1][tag2][tag3]
+//         match config.Tags with
+//         | Some tags ->
+//             newLine ()
+//             tags |> List.map (fun tag -> $"[%s{tag}]") |> String.concat ""
+//             newLine ()
+//         | None -> ""
 
-        match config.Description with
-        | Some longDescription ->
-            newLine ()
-            longDescription
-            newLine ()
-        | None -> ""
-    ]
-    |> String.concat ""
+//         match config.Description with
+//         | Some longDescription ->
+//             newLine ()
+//             longDescription
+//             newLine ()
+//         | None -> ""
+//     ]
+//     |> String.concat ""
 
 // let internal promptCommitMessage (console: IAnsiConsole) (commitConfig: CommitParserConfig) =
 //     let commitType = Prompt.commitType console commitConfig
@@ -161,133 +161,182 @@ let internal generateCommitMessage (config: CommitMessageConfig) =
 //         IsBreakingChange = Prompt.isBreakingChange console
 //     }
 
-open Terminal.Gui
+open Avalonia
+open Avalonia.Controls.ApplicationLifetimes
+open Avalonia.Themes.Fluent
+open Avalonia.FuncUI.Hosts
+open Avalonia.Controls
+open Avalonia.FuncUI
+open Avalonia.FuncUI.DSL
+open Avalonia.Layout
+open Avalonia.Media
+open Avalonia.Controls.Primitives
 
-// type InteractiveWindow(config: CommitParserConfig) as this =
-//     inherit Window()
+// [<RequireQualifiedAccess>]
+// module AppState =
 
-//     let promptCommitType (config: CommitParserConfig) =
-//         let step = new WizardStep()
+//     let commitMessageConfig =
+//         {
+//             CommitType = Unchecked.defaultof<CommitType>
+//             Tags = Some [ "converter"; "web" ]
+//             ShortMessage = "Add new feature"
+//             Description = Some "This is a new feature"
+//             IsBreakingChange = false
+//         }
 
-//         let commitTypeLabel = new Label(Text = "Select the type of commit")
+// module Main =
 
-//         let listOfCommitTypes =
-//             config.Types |> List.map (fun commitType -> commitType.Name) |> Array.ofList
+//     type FakeDataItem = { Name: string; Description: string }
 
-//         let choices =
-//             new RadioGroup(X = 1, Y = Pos.Bottom(commitTypeLabel), RadioLabels = listOfCommitTypes)
+//     let fieldWithLabel (label: string) column (field: #Types.IView) =
+//         StackPanel.create
+//             [
+//                 StackPanel.orientation Orientation.Vertical
+//                 StackPanel.spacing 5
+//                 StackPanel.children [ TextBlock.create [ TextBlock.text label ]; field ]
+//                 Grid.column column
+//             ]
 
-//         choices.SelectedItemChanged.Add(fun _ ->
-//             InteractiveWindow.CommitType <-
-//                 config.Types
-//                 |> List.find (fun commitType ->
-//                     commitType.Name = choices.RadioLabels[choices.SelectedItem]
-//                 )
+//     let chooseType (config: CommitParserConfig) =
+//         let types = config.Types |> List.map (fun commitType -> commitType.Name)
+
+//         ComboBox.create
+//             [
+//                 ComboBox.dataItems types
+//                 ComboBox.horizontalAlignment HorizontalAlignment.Stretch
+//                 ComboBox.classes [ "commit-type" ]
+//                 ComboBox.selectedIndex 0
+//             ]
+//         |> fieldWithLabel "Type" 0
+
+//     let view (config: CommitParserConfig) =
+//         Component(fun ctx ->
+//             let state = ctx.useState 0
+
+//             Grid.create
+//                 [
+//                     Grid.margin (Thickness 20)
+//                     Grid.columnDefinitions "200, *"
+//                     Grid.children
+//                         [
+//                             chooseType config
+
+//                             // TextBox.create [ ] |> fieldWithLabel "Short message" 1
+
+//                             Grid.create
+//                                 [
+//                                     Grid.column 1
+//                                     Grid.rowDefinitions "auto,auto,*,auto, auto"
+//                                     Grid.children
+//                                         [
+//                                             TextBox.create [ Grid.row 0 ]
+//                                             // ScrollViewer.create
+//                                             //     [
+//                                             //         Grid.row 1
+//                                             //         ScrollViewer.horizontalScrollBarVisibility
+//                                             //             ScrollBarVisibility.Auto
+//                                             //         ScrollViewer.verticalScrollBarVisibility
+//                                             //             ScrollBarVisibility.Auto
+//                                             //         ScrollViewer.maxHeight 200.0
+//                                             //         ScrollViewer.content (
+
+//                                             //         )
+//                                             //     ]
+//                                             WrapPanel.create
+//                                                 [
+//                                                     Grid.row 1
+//                                                     WrapPanel.orientation Orientation.Horizontal
+//                                                     WrapPanel.maxHeight 200.0
+//                                                     WrapPanel.children
+//                                                         [
+//                                                             CheckBox.create
+//                                                                 [
+
+//                                                                     CheckBox.margin (
+//                                                                         Thickness(
+//                                                                             0,
+//                                                                             0,
+//                                                                             5,
+//                                                                             0
+//                                                                         )
+//                                                                     )
+//                                                                     CheckBox.content
+//                                                                         $"converter"
+//                                                                 ]
+//                                                             CheckBox.create
+//                                                                 [
+
+//                                                                     CheckBox.margin (
+//                                                                         Thickness(
+//                                                                             0,
+//                                                                             0,
+//                                                                             5,
+//                                                                             0
+//                                                                         )
+//                                                                     )
+//                                                                     CheckBox.content
+//                                                                         $"web"
+//                                                                 ]
+//                                                         ]
+//                                                 ]
+//                                             TextBox.create
+//                                                 [
+//                                                     Grid.row 2
+//                                                     TextBox.acceptsReturn true
+//                                                     TextBox.textWrapping
+//                                                         TextWrapping.WrapWithOverflow
+//                                                 ]
+//                                             CheckBox.create
+//                                                 [
+//                                                     Grid.row 3
+//                                                     CheckBox.isChecked false
+//                                                     CheckBox.content "Is breaking change?"
+//                                                 ]
+//                                             StackPanel.create [
+//                                                 Grid.row 4
+//                                                 StackPanel.children [
+//                                                     Button.create [
+//                                                         Button.content "Submit"
+//                                                         Button.onClick (fun _ ->
+//                                                             printfn "Submit"
+//                                                         )
+//                                                     ]
+//                                                 ]
+//                                             ]
+//                                         ]
+//                                 ]
+//                         ]
+//                 ]
 //         )
 
-//         choices.SetFocus()
-//         step.SetFocus()
-//         step.Add(commitTypeLabel, choices)
-//         step
+// type MainWindow(config: CommitParserConfig) as this =
+//     inherit HostWindow()
 
 //     do
-//         this.Title <- $"Commit editor (%O{Application.QuitKey} to quit)"
+//         base.Title <- "Commit editor"
+//         base.Content <- Main.view config
+//         base.Width <- 1024.0
+//         base.Height <- 768.0
+//         base.CanResize <- false
 
-//         let wizard = new Wizard()
+// #if DEBUG
+//         this.AttachDevTools()
+// #endif
 
-//         wizard.AddStep(promptCommitType config) |> ignore
+// type App(config: CommitParserConfig) =
+//     inherit Application()
 
-//         wizard.Finished.Add(fun _ -> Application.RequestStop())
-//         wizard.Modal <- false
-//         // wizard.NextFinishButton.
+//     override this.Initialize() =
+//         this.Styles.Add(FluentTheme())
+//         this.Styles.Load "avares://EasyBuild.CommitLinter/Styles.xaml"
 
-//         this.Add(wizard) |> ignore
+//     // this.RequestedThemeVariant <- Styling.ThemeVariant.Default
 
-//     //         let userNameLabel = new Label(Text = "Username: ")
-
-//     //         let input =
-//     //             new TextView(
-//     //                 Y = Pos.Bottom(userNameLabel) + Pos.op_Implicit 1,
-//     //                 Text =
-//     //                     """Line 1
-//     // Line 2""",
-//     //                 Width = Dim.Fill(),
-//     //                 Height = Dim.op_Implicit 10
-//     //             )
-
-//     //         input.ReadOnly <- true
-//     //         input.SetFocus()
-
-//     //         let wizard = new Wizard()
-
-//     //         // wizard.ColorScheme <- p
-
-//     //         let step1 = new WizardStep()
-//     //         step1.Add(userNameLabel) |> ignore
-
-//     //         let step2 = new WizardStep()
-//     //         step2.Add(userNameLabel, input) |> ignore
-
-//     //         wizard.AddStep(step1) |> ignore
-//     //         wizard.AddStep(step2) |> ignore
-
-//     //         // Remove the wizard when it's done
-//     //         wizard.Finished.Add(fun _ ->
-//     //             this.Remove(wizard) |> ignore
-//     //         )
-
-//     //         let exitButton =
-//     //             new Button(Text = "Exit", Y = Pos.Bottom(input) + Pos.op_Implicit 1)
-
-//     //         exitButton.Accept.Add(fun _ -> Application.RequestStop())
-
-//     //         this.Add(wizard) |> ignore
-
-//     static member val CommitType = Unchecked.defaultof<CommitType> with get, set
-
-type InteractiveWindow(config: CommitParserConfig) as this =
-    inherit Window()
-
-    let mutable firstStep = new WizardStep()
-    let mutable choices = Unchecked.defaultof<RadioGroup>
-
-    let promptCommitType (config: CommitParserConfig) =
-
-        let commitTypeLabel = new Label(Text = "Select the type of commit")
-
-        let listOfCommitTypes =
-            [| "feat"; "fix"; "docs"; "style"; "refactor"; "perf"; "test"; "chore" |]
-
-        choices <-
-            new RadioGroup(X = 1, Y = Pos.Bottom(commitTypeLabel), RadioLabels = listOfCommitTypes)
-
-        choices.SelectedItemChanged.Add(fun _ ->
-            InteractiveWindow.CommitType <- choices.RadioLabels[choices.SelectedItem]
-        )
-
-        // Force focus on the radio group for faster
-        // choices.SetFocus()
-
-        firstStep.Add(commitTypeLabel, choices)
-        firstStep
-
-    do
-        this.Title <- $"Commit editor (%O{Application.QuitKey} to quit)"
-
-        let wizard = new Wizard()
-
-        wizard.AddStep(promptCommitType config) |> ignore
-
-        wizard.Finished.Add(fun _ -> Application.RequestStop())
-
-        wizard.StepChanged.Add(fun args ->
-            if args.NewStep = firstStep then
-                choices.SetFocus() |> ignore
-        )
-
-        this.Add(wizard) |> ignore
-
-    static member val CommitType = "You should not see this text" with get, set
+//     override this.OnFrameworkInitializationCompleted() =
+//         match this.ApplicationLifetime with
+//         | :? IClassicDesktopStyleApplicationLifetime as desktopLifetime ->
+//             desktopLifetime.MainWindow <- MainWindow config
+//         | _ -> ()
 
 type InteractiveCommand() =
     inherit Command<InteractiveSettings>()
@@ -295,34 +344,27 @@ type InteractiveCommand() =
     interface ICommandLimiter<InteractiveSettings>
 
     override __.Execute(context, settings) =
-        // printfn "%A" settings.CommitFile
-
         match tryLoadConfig settings.Config with
         | LoadConfig.Failed -> 1
         | LoadConfig.Success config ->
-            // let console = AnsiConsole.Console
+            if List.isEmpty config.Types then
+                AnsiConsole.MarkupLine(
+                    $"[red]Error:[/] No commit types defined in the configuration file."
+                )
 
-            // let commitMessageText = promptCommitMessage console config |> generateCommitMessage
+                exit 1
+            else
+                // Initialize the commit message config with the first commit type
+                // AppState.commitMessageConfig.CommitType <- config.Types |> List.head
 
-            Application.Init()
-            let app = new InteractiveWindow(config)
-            Application.Run app |> ignore
-            Application.Shutdown()
+                AppBuilder
+                    .Configure(fun _ -> App config)
+                    .UsePlatformDetect()
+                    .UseSkia()
+                    .StartWithClassicDesktopLifetime([||])
+                |> ignore
 
-            printfn "%A" InteractiveWindow.CommitType
+                // // Write the commit message to the file
+                // File.WriteAllText(settings.CommitFile, commitMessageText)
 
-            // // Ask confirmation before shipping the commit
-            // if not settings.SkipConfirmation then
-            //     // User rejected the commit
-            //     if not (Prompt.commitConfirmation console commitMessageText) then
-            //         console.WriteLine("[red]Commit aborted[/]")
-            //         exit 1
-
-            // // Write the commit message to the file
-            // File.WriteAllText(settings.CommitFile, commitMessageText)
-
-            //     0
-
-            // Application.QuitKey <- Key.C
-
-            0
+                0

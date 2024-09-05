@@ -1,34 +1,36 @@
-﻿module CommitLinter.Main
+﻿namespace CommitLinter
 
 open Spectre.Console.Cli
 open CommitLinter.Commands.Lint
 open CommitLinter.Commands.Interactive
 
-[<EntryPoint>]
-let main args =
+module Main =
 
-    let app = CommandApp<LintCommand>()
+    [<EntryPoint>]
+    let main args =
 
-    app
-        .WithDescription(
-            "Lint your commit message based on EasyBuild.CommitLinter conventions
+        let app = CommandApp<LintCommand>()
+
+        app
+            .WithDescription(
+                "Lint your commit message based on EasyBuild.CommitLinter conventions
 
 Learn more at https://github.com/easybuild-org/EasyBuild.CommitLinter"
-        )
-        .Configure(fun config ->
-            config.Settings.ApplicationName <- "commit-linter"
+            )
+            .Configure(fun config ->
+                config.Settings.ApplicationName <- "commit-linter"
 
-            config
-                .AddCommand<LintCommand>("lint")
-                .WithDescription("Lint your commit message")
-                .IsHidden()
-            |> ignore
+                config
+                    .AddCommand<LintCommand>("lint")
+                    .WithDescription("Lint your commit message")
+                    .IsHidden()
+                |> ignore
 
-            config
-                .AddCommand<InteractiveCommand>("interactive")
-                .WithDescription("Interactively create a commit message")
-            |> ignore
+                config
+                    .AddCommand<InteractiveCommand>("interactive")
+                    .WithDescription("Interactively create a commit message")
+                |> ignore
 
-        )
+            )
 
-    app.Run(args)
+        app.Run(args)

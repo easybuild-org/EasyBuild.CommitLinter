@@ -1,4 +1,4 @@
-module CommitLinter.Commands.Lint
+namespace CommitLinter.Commands.Lint
 
 open Spectre.Console
 open Spectre.Console.Cli

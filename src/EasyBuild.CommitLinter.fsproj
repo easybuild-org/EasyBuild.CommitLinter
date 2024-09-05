@@ -15,15 +15,23 @@
     <ItemGroup>
         <Compile Include="ConfigLoader.fs" />
         <Compile Include="Commands/Lint.fs" />
+        <Compile Include="Commands/Interactive.Editor.fs" />
+        <Compile Include="Commands/Interactive.App.fs" />
         <Compile Include="Commands/Interactive.fs" />
         <Compile Include="Main.fs" />
+        <AvaloniaResource Include="**\*.xaml" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Avalonia.Desktop" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" />
         <PackageReference Include="Avalonia.FuncUI" />
+        <PackageReference Include="Avalonia.FuncUI.Elmish" />
         <PackageReference Include="Avalonia.Themes.Fluent" />
         <PackageReference Include="EasyBuild.CommitParser" />
+        <PackageReference Include="FSharp.SystemTextJson" />
+        <PackageReference Include="Live.Avalonia" />
         <PackageReference Include="Spectre.Console.Cli" />
         <PackageReference Include="Terminal.Gui" />
         <PackageReference Include="Thoth.Json.Newtonsoft" />

@@ -1,43 +1,45 @@
-module CommitLinter.ConfigLoader
+namespace CommitLinter
 
 open EasyBuild.CommitParser.Types
 open System.IO
 open Spectre.Console
 open Thoth.Json.Newtonsoft
 
-[<RequireQualifiedAccess>]
-type LoadConfig =
-    | Failed
-    | Success of CommitParserConfig
+module ConfigLoader =
 
-let tryLoadConfig (configPath: string option) =
-    match configPath with
-    | Some configFile ->
-        let configFile =
-            if Path.IsPathFullyQualified(configFile) then
-                configFile
-            else
-                Path.Combine(Directory.GetCurrentDirectory(), configFile) |> Path.GetFullPath
+    [<RequireQualifiedAccess>]
+    type LoadConfig =
+        | Failed
+        | Success of CommitParserConfig
 
-        let configFile = FileInfo(configFile)
+    let tryLoadConfig (configPath: string option) =
+        match configPath with
+        | Some configFile ->
+            let configFile =
+                if Path.IsPathFullyQualified(configFile) then
+                    configFile
+                else
+                    Path.Combine(Directory.GetCurrentDirectory(), configFile) |> Path.GetFullPath
 
-        if not configFile.Exists then
-            AnsiConsole.MarkupLine(
-                $"[red]Error:[/] Configuration file '{configFile.FullName}' does not exist."
-            )
+            let configFile = FileInfo(configFile)
 
-            LoadConfig.Failed
-        else
-
-            let configContent = File.ReadAllText(configFile.FullName)
-
-            match Decode.fromString CommitParserConfig.decoder configContent with
-            | Ok config -> config |> LoadConfig.Success
-            | Error error ->
+            if not configFile.Exists then
                 AnsiConsole.MarkupLine(
-                    $"[red]Error:[/] Failed to parse configuration file:\n\n{error}"
+                    $"[red]Error:[/] Configuration file '{configFile.FullName}' does not exist."
                 )
 
                 LoadConfig.Failed
+            else
 
-    | None -> CommitParserConfig.Default |> LoadConfig.Success
+                let configContent = File.ReadAllText(configFile.FullName)
+
+                match Decode.fromString CommitParserConfig.decoder configContent with
+                | Ok config -> config |> LoadConfig.Success
+                | Error error ->
+                    AnsiConsole.MarkupLine(
+                        $"[red]Error:[/] Failed to parse configuration file:\n\n{error}"
+                    )
+
+                    LoadConfig.Failed
+
+        | None -> CommitParserConfig.Default |> LoadConfig.Success
