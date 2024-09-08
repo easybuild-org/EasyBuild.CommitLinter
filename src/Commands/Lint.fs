@@ -4,8 +4,9 @@ open Spectre.Console
 open Spectre.Console.Cli
 open System.ComponentModel
 open System.IO
-open CommitLinter
+open EasyBuild.CommitParser
 open Thoth.Json.Newtonsoft
+open EasyBuild.CommitParser.Types
 
 type LintSettings() =
     inherit CommandSettings()
@@ -23,7 +24,7 @@ type LintSettings() =
 [<RequireQualifiedAccess>]
 type LoadConfig =
     | Failed
-    | Success of Config.Config
+    | Success of CommitParserConfig
 
 type LintCommand() =
     inherit Command<LintSettings>()
@@ -49,7 +50,7 @@ type LintCommand() =
 
                 let configContent = File.ReadAllText(configFile.FullName)
 
-                match Decode.fromString Config.Config.decoder configContent with
+                match Decode.fromString CommitParserConfig.decoder configContent with
                 | Ok config -> config |> LoadConfig.Success
                 | Error error ->
                     AnsiConsole.MarkupLine(
@@ -58,7 +59,7 @@ type LintCommand() =
 
                     LoadConfig.Failed
 
-        | None -> Config.defaultConfig |> LoadConfig.Success
+        | None -> CommitParserConfig.Default |> LoadConfig.Success
 
     interface ICommandLimiter<LintSettings>
 
@@ -83,7 +84,7 @@ type LintCommand() =
             match tryLoadConfig settings with
             | LoadConfig.Failed -> 1
             | LoadConfig.Success config ->
-                match Parser.validateCommitMessage config commitMessage with
+                match Parser.tryValidateCommitMessage config commitMessage with
                 | Ok _ ->
                     AnsiConsole.MarkupLine("[green]Success:[/] Commit message is valid.")
                     0

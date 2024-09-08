@@ -2,6 +2,16 @@
   "version": 2,
   "dependencies": {
     "net6.0": {
+      "EasyBuild.CommitParser": {
+        "type": "Direct",
+        "requested": "[1.1.1, )",
+        "resolved": "1.1.1",
+        "contentHash": "svofHaMlKl0PPGNKh1Z+2pobUo9x2V7sjVqO96Us42L5Uoy/C6+b0+Y3PlCgFvCaM7xxDbuhN/9iq/s6/EAvrg==",
+        "dependencies": {
+          "FSharp.Core": "5.0.2",
+          "Thoth.Json.Newtonsoft": "0.1.0"
+        }
+      },
       "FSharp.Core": {
         "type": "Direct",
         "requested": "[8.0.101, )",
