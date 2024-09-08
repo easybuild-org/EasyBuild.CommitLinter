@@ -30,8 +30,6 @@
         <PackageReference Include="Avalonia.FuncUI.Elmish" />
         <PackageReference Include="Avalonia.Themes.Fluent" />
         <PackageReference Include="EasyBuild.CommitParser" />
-        <PackageReference Include="FSharp.SystemTextJson" />
-        <PackageReference Include="Live.Avalonia" />
         <PackageReference Include="Spectre.Console.Cli" />
         <PackageReference Include="Terminal.Gui" />
         <PackageReference Include="Thoth.Json.Newtonsoft" />
