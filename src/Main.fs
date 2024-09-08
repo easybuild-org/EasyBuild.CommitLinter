@@ -1,7 +1,7 @@
 ﻿module CommitLinter.Main
 
 open Spectre.Console.Cli
-open CommitLinter.Commands
+open CommitLinter.Commands.Lint
 
 [<EntryPoint>]
 let main args =

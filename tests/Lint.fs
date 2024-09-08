@@ -1,146 +1,124 @@
-module Lint
+module Tests.Lint
 
-open Expecto
-open Expecto.NoMessage
-open CommitLinter.Commands
+open CommitLinter.Commands.Lint
 open Workspace
+open Tests.Setup
+open Faqt
 
-[<Tests>]
-let tests =
-    testList
-        "Lint"
-        [
-            test "LintCommand.Execute should return 1 when the commit file does not exist" {
-                let actual =
-                    LintCommand()
-                        .Execute(null, LintSettings(CommitFile = "this-file-does-not-exist"))
+[<Test>]
+let ``LintCommand.Execute should return 1 when the commit file does not exist`` () =
+    LintCommand()
+        .Execute(null, LintSettings(CommitFile = "this-file-does-not-exist"))
+        .Should()
+        .Be(1)
+    |> ignore
 
-                Expect.equal actual 1
-            }
+[<Test>]
+let ``LintCommand.Execute should return 1 when the config file does not exist`` () =
+    LintCommand()
+        .Execute(
+            null,
+            LintSettings(
+                CommitFile = Workspace.fixtures.``shortCommitOnly.txt``,
+                Config = Some "this-file-does-not-exist"
+            )
+        )
+        .Should()
+        .Be(1)
+    |> ignore
 
-            test "LintCommand.Execute should return 1 when the config file does not exist" {
-                let actual =
-                    LintCommand()
-                        .Execute(
-                            null,
-                            LintSettings(
-                                CommitFile = Workspace.fixtures.``shortCommitOnly.txt``,
-                                Config = Some "this-file-does-not-exist"
-                            )
-                        )
+[<Test>]
+let ``LintCommand.Execute should return 1 when the config file is invalid`` () =
+    LintCommand()
+        .Execute(
+            null,
+            LintSettings(
+                CommitFile = Workspace.fixtures.``shortCommitOnly.txt``,
+                Config = Some Workspace.fixtures.``invalid-custom-config.json``
+            )
+        )
+        .Should()
+        .Be(1)
+    |> ignore
 
-                Expect.equal actual 1
-            }
+[<Test>]
+let ``LintCommand.Execute use the provided config file`` () =
+    LintCommand()
+        .Execute(
+            null,
+            LintSettings(
+                CommitFile = Workspace.fixtures.``custom-type.txt``,
+                Config = Some Workspace.fixtures.``custom-config.json``
+            )
+        )
+        .Should()
+        .Be(0)
+    |> ignore
 
-            test "LintCommand.Execute should return 1 when the config file is invalid" {
-                let actual =
-                    LintCommand()
-                        .Execute(
-                            null,
-                            LintSettings(
-                                CommitFile = Workspace.fixtures.``shortCommitOnly.txt``,
-                                Config = Some Workspace.fixtures.``invalid-custom-config.json``
-                            )
-                        )
+[<Test>]
+let ``LintCommand.Execute should return 0 when the commit file exists and is valid`` () =
+    LintCommand()
+        .Execute(null, LintSettings(CommitFile = Workspace.fixtures.``shortCommitOnly.txt``))
+        .Should()
+        .Be(0)
+    |> ignore
 
-                Expect.equal actual 1
-            }
+    LintCommand()
+        .Execute(null, LintSettings(CommitFile = Workspace.fixtures.``shortCommitWithTag.txt``))
+        .Should()
+        .Be(0)
+    |> ignore
 
-            test "LintCommand.Execute use the provided config file" {
-                let actual =
-                    LintCommand()
-                        .Execute(
-                            null,
-                            LintSettings(
-                                CommitFile = Workspace.fixtures.``custom-type.txt``,
-                                Config = Some Workspace.fixtures.``custom-config.json``
-                            )
-                        )
+    LintCommand()
+        .Execute(null, LintSettings(CommitFile = Workspace.fixtures.``shortCommitWithTags.txt``))
+        .Should()
+        .Be(0)
+    |> ignore
 
-                Expect.equal actual 0
-            }
+    LintCommand()
+        .Execute(null, LintSettings(CommitFile = Workspace.fixtures.``commitWithBody.txt``))
+        .Should()
+        .Be(0)
+    |> ignore
 
-            test "LintCommand.Execute should return 0 when the commit file exists and is valid" {
-                Expect.equal
-                    (LintCommand()
-                        .Execute(
-                            null,
-                            LintSettings(CommitFile = Workspace.fixtures.``shortCommitOnly.txt``)
-                        ))
-                    0
+    LintCommand()
+        .Execute(null, LintSettings(CommitFile = Workspace.fixtures.``commitWithTagsAndBody.txt``))
+        .Should()
+        .Be(0)
+    |> ignore
 
-                Expect.equal
-                    (LintCommand()
-                        .Execute(
-                            null,
-                            LintSettings(CommitFile = Workspace.fixtures.``shortCommitWithTag.txt``)
-                        ))
-                    0
+[<Test>]
+let ``LintCommand.Execute works with relative file path for the commit file`` () =
+    LintCommand()
+        .Execute(null, LintSettings(CommitFile = "../../../fixtures/shortCommitOnly.txt"))
+        .Should()
+        .Be(0)
+    |> ignore
 
-                Expect.equal
-                    (LintCommand()
-                        .Execute(
-                            null,
-                            LintSettings(
-                                CommitFile = Workspace.fixtures.``shortCommitWithTags.txt``
-                            )
-                        ))
-                    0
+[<Test>]
+let ``LintCommand.Execute works with relative file path for the config file`` () =
+    LintCommand()
+        .Execute(
+            null,
+            LintSettings(
+                CommitFile = Workspace.fixtures.``custom-type.txt``,
+                Config = Some "../../../fixtures/custom-config.json"
+            )
+        )
+        .Should()
+        .Be(0)
+    |> ignore
 
-                Expect.equal
-                    (LintCommand()
-                        .Execute(
-                            null,
-                            LintSettings(CommitFile = Workspace.fixtures.``commitWithBody.txt``)
-                        ))
-                    0
-
-                Expect.equal
-                    (LintCommand()
-                        .Execute(
-                            null,
-                            LintSettings(
-                                CommitFile = Workspace.fixtures.``commitWithTagsAndBody.txt``
-                            )
-                        ))
-                    0
-            }
-
-            test "LintCommand.Execute works with relative file path for the commit file" {
-                let actual =
-                    LintCommand()
-                        .Execute(
-                            null,
-                            LintSettings(CommitFile = "../../../fixtures/shortCommitOnly.txt")
-                        )
-
-                Expect.equal actual 0
-            }
-
-            test "LintCommand.Execute works with relative file path for the config file" {
-                let actual =
-                    LintCommand()
-                        .Execute(
-                            null,
-                            LintSettings(
-                                CommitFile = Workspace.fixtures.``custom-type.txt``,
-                                Config = Some "../../../fixtures/custom-config.json"
-                            )
-                        )
-
-                Expect.equal actual 0
-            }
-
-            test "LintCommand.Execute should return 1 when the commit file exists and is invalid" {
-                Expect.equal
-                    (LintCommand()
-                        .Execute(
-                            null,
-                            LintSettings(
-                                CommitFile =
-                                    Workspace.fixtures.``invalidCommitMissingEmptyLineAfterShortCommit.txt``
-                            )
-                        ))
-                    1
-            }
-        ]
+[<Test>]
+let ``LintCommand.Execute should return 1 when the commit file exists and is invalid`` () =
+    LintCommand()
+        .Execute(
+            null,
+            LintSettings(
+                CommitFile =
+                    Workspace.fixtures.``invalidCommitMissingEmptyLineAfterShortCommit.txt``
+            )
+        )
+        .Should()
+        .Be(1)
+    |> ignore

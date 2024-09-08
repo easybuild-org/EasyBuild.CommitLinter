@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -13,13 +13,13 @@
         </AssemblyAttribute>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="ConfigLoader.fs" />
         <Compile Include="Commands/Lint.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="EasyBuild.CommitParser" />
-        <PackageReference Include="FsToolkit.ErrorHandling" />
         <PackageReference Include="Spectre.Console.Cli" />
         <PackageReference Include="Thoth.Json.Newtonsoft" />
     </ItemGroup>
