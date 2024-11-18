@@ -49,25 +49,21 @@ dotnet husky add commit-msg -c 'dotnet commit-linter "$1"'
 ## Commit Format
 
 > [!NOTE]
-> EasyBuild.CommitLinter format is based on [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and extends it to work in a monorepo environment.
+> EasyBuild.CommitParser format is based on [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+>
+> It add a special `Tag` footer, allowing it to be used in a mono-repo context.
+>
+> Tools like [EasyBuild.ChangelogGen](https://github.com/easybuild-org/EasyBuild.ChangelogGen) can use the tag to filter the commits to include in the changelog.
 
 ```text
 <type>[optional scope][optional !]: <description>
-
-[optional tags]
 
 [optional body]
 
 [optional footer]
 ```
 
--   `[optional tags]` format is as follows:
-
-    ```text
-    [tag1][tag2][tag3]
-    ```
-
--   `[optional body]` is a free-form text.
+- `[optional body]` is a free-form text.
 
     ```text
     This is a single line body.
@@ -79,21 +75,21 @@ dotnet husky add commit-msg -c 'dotnet commit-linter "$1"'
     multi-line body.
     ```
 
--   `[optional footer]` follows [git trailer format](https://git-scm.com/docs/git-interpret-trailers)
+- `[optional footer]` is inspired by [git trailer format](https://git-scm.com/docs/git-interpret-trailers) `key: value` but also allows `key #value`
 
     ```text
     BREAKING CHANGE: <description>
     Signed-off-by: Alice <alice@example.com>
     Signed-off-by: Bob <bob@example.com>
+    Refs #123
+    Tag: cli
     ```
+
+    💡 The `Tag` footer can be provided multiple times.
 
 ## Configuration
 
-> [!WARNING]
-> This tool is still in beta and the configuration format can be subject to changes as it will be shared with 
-[EasyBuild.ChangelogGen configuration format](https://github.com/easybuild-org/EasyBuild.ChangelogGen/issues/1)
-
-EasyBuild.CommitLinter comes with a default configuration to validate your commit.
+EasyBuild.CommitParser comes with a default configuration to validate your commit.
 
 The default configuration allows the following commit types with no tags required:
 
@@ -106,7 +102,7 @@ The default configuration allows the following commit types with no tags require
 - `style` - Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
 - `refactor` - A code change that neither fixes a bug nor adds a feature
 
-If needed, you can provide a custom configuration file by using the `--config` option.
+If needed, you can provide a custom configuration either by code directly or by using a configuration file using JSON format.
 
 ### Configuration File Format
 
@@ -114,21 +110,21 @@ The configuration file is a JSON file with the following properties:
 
 #### types
 
--   Required: ✅
--   Type: `{ name: string, description?: string, skipTagLine?: bool } []`
+- Required: ✅
+- Type: `{ name: string, description?: string, skipTagFooter?: bool } []`
 
 List of accepted commit types.
 
-| Property    | Type   | Required | Description                           |
-| ----------- | ------ | :------: | ------------------------------------- |
-| name        | string |    ✅    | The name of the commit type.          |
-| description | string |    ❌    | The description of the commit type.   |
-| skipTagLine | bool   |    ❌    | If `true` skip the tag line validation. <br> If `false`, checks that the tag line format is valid and contains knows tags. <br><br>Default is `true`. |
+| Property      | Type   | Required | Description                           |
+| --------------| ------ | :------: | ------------------------------------- |
+| name          | string |    ✅    | The name of the commit type.          |
+| description   | string |    ❌    | The description of the commit type.   |
+| skipTagFooter | bool   |    ❌    | If `true` skip the tag footer validation. <br> If `false`, checks that the tag footer is provided and contains knows tags. <br><br>Default is `true`. |
 
 #### tags
 
--   Required: ❌
--   Type: `string []`
+- Required: ❌
+- Type: `string []`
 
 List of accepted commit tags.
 
@@ -137,12 +133,12 @@ List of accepted commit tags.
 ```json
 {
     "types": [
-        { "name": "feat", "description": "A new feature", "skipTagLine": false },
-        { "name": "fix", "description": "A bug fix", "skipTagLine": false },
-        { "name": "docs", "description": "Documentation changes", "skipTagLine": false },
-        { "name": "test", "description": "Adding missing tests or correcting existing tests", "skipTagLine": false },
-        { "name": "style", "description": "Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)", "skipTagLine": false },
-        { "name": "refactor", "description": "A code change that neither fixes a bug nor adds a feature", "skipTagLine": false },
+        { "name": "feat", "description": "A new feature", "skipTagFooter": false },
+        { "name": "fix", "description": "A bug fix", "skipTagFooter": false },
+        { "name": "docs", "description": "Documentation changes", "skipTagFooter": false },
+        { "name": "test", "description": "Adding missing tests or correcting existing tests", "skipTagFooter": false },
+        { "name": "style", "description": "Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)", "skipTagFooter": false },
+        { "name": "refactor", "description": "A code change that neither fixes a bug nor adds a feature", "skipTagFooter": false },
         { "name": "ci", "description": "Changes to CI/CD configuration" },
         { "name": "chore", "description": "Changes to the build process or auxiliary tools and libraries such as documentation generation" }
     ],

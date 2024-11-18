@@ -4,19 +4,20 @@
     "net6.0": {
       "EasyBuild.CommitParser": {
         "type": "Direct",
-        "requested": "[1.1.1, )",
-        "resolved": "1.1.1",
-        "contentHash": "svofHaMlKl0PPGNKh1Z+2pobUo9x2V7sjVqO96Us42L5Uoy/C6+b0+Y3PlCgFvCaM7xxDbuhN/9iq/s6/EAvrg==",
+        "requested": "[2.0.0, )",
+        "resolved": "2.0.0",
+        "contentHash": "hplgmdQQOwnSnOIeR2HhlgHs3Jzz8XeoyZB3qnjfWJREqZX+5BIYrNorcDxiVluqu9FT9U1vinxz4gCHc7FarQ==",
         "dependencies": {
-          "FSharp.Core": "5.0.2",
+          "FSharp.Core": "7.0.300",
+          "FsToolkit.ErrorHandling": "4.18.0",
           "Thoth.Json.Newtonsoft": "0.1.0"
         }
       },
       "FSharp.Core": {
         "type": "Direct",
-        "requested": "[5.0.2, )",
-        "resolved": "5.0.2",
-        "contentHash": "DpcajqENgb3VXaHw1FKfVS+TWwEzck1PCajqLwBAVrtd1lfxd7T8JISVZBdV1mX9+2g48+tIgpNaVJWObdMrBw=="
+        "requested": "[7.0.300, )",
+        "resolved": "7.0.300",
+        "contentHash": "8vvItREJ1l5lcp3vBCSJ1mFevVAhR48I34DuF/EoUa7o1KlFpQpagyuZkVYMAsHPIjdp47ZxM9sI4eqeXaeWkA=="
       },
       "Spectre.Console.Cli": {
         "type": "Direct",
@@ -43,6 +44,14 @@
         "type": "Transitive",
         "resolved": "4.1.0",
         "contentHash": "NISAbAVGEcvH2s+vHLSOCzh98xMYx4aIadWacQdWPcQLploxpSQXLEe9SeszUBhbHa73KMiKREsH4/W3q4A4iA=="
+      },
+      "FsToolkit.ErrorHandling": {
+        "type": "Transitive",
+        "resolved": "4.18.0",
+        "contentHash": "cGtOP6lWcnLcXiLTGZLHi+8JAyuUDjGhZOmJWnZfd5aPCUIyL+DqUIwmfEGkUk3j/gpcchLDk9BNwUTc1oM30w==",
+        "dependencies": {
+          "FSharp.Core": "7.0.300"
+        }
       },
       "Newtonsoft.Json": {
         "type": "Transitive",
