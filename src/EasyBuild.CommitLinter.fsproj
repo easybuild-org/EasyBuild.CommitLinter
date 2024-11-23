@@ -19,6 +19,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="DotNet.ReproducibleBuilds">
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
         <PackageReference Include="EasyBuild.CommitParser" />
         <PackageReference Include="Spectre.Console.Cli" />
         <PackageReference Include="Thoth.Json.Newtonsoft" />
