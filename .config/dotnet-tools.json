@@ -13,6 +13,12 @@
       "commands": [
         "husky"
       ]
+    },
+    "easybuild.changeloggen": {
+      "version": "2.0.0",
+      "commands": [
+        "changelog-gen"
+      ]
     }
   }
 }

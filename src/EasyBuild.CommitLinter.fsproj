@@ -6,6 +6,7 @@
         <RollForward>Major</RollForward>
         <PackAsTool>true</PackAsTool>
         <ToolCommandName>commit-linter</ToolCommandName>
+        <ChangelogFile>$(MSBuildThisFileDirectory)../CHANGELOG.md</ChangelogFile>
     </PropertyGroup>
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
@@ -24,6 +25,10 @@
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="EasyBuild.CommitParser" />
+        <PackageReference Include="EasyBuild.PackageReleaseNotes.Tasks">
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
         <PackageReference Include="Spectre.Console.Cli" />
         <PackageReference Include="Thoth.Json.Newtonsoft" />
     </ItemGroup>
