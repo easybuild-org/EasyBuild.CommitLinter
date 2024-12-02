@@ -8,7 +8,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
-    <PackageVersion Include="EasyBuild.CommitParser" Version="2.2.0" />
+    <PackageVersion Include="EasyBuild.CommitParser" Version="3.0.0" />
     <PackageVersion Include="EasyBuild.FileSystemProvider" Version="0.3.0" />
     <PackageVersion Include="Faqt" Version="4.0.1" />
     <PackageVersion Include="Fixie.TestAdapter" Version="3.4.0" />

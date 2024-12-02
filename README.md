@@ -101,6 +101,10 @@ The default configuration allows the following commit types with no tags require
 - `test` - Adding missing tests or correcting existing tests
 - `style` - Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
 - `refactor` - A code change that neither fixes a bug nor adds a feature
+- `perf` - A code change that improves performance
+- `revert` - Reverts a previous commit
+- `build` - Changes that affect the build system or external dependencies
+
 
 If needed, you can provide a custom configuration either by code directly or by using a configuration file using JSON format.
 
@@ -134,6 +138,7 @@ List of accepted commit tags.
 {
     "types": [
         { "name": "feat", "description": "A new feature", "skipTagFooter": false },
+        { "name": "perf", "description": "A code change that improves performance", "skipTagFooter": false },
         { "name": "fix", "description": "A bug fix", "skipTagFooter": false },
         { "name": "docs", "description": "Documentation changes", "skipTagFooter": false },
         { "name": "test", "description": "Adding missing tests or correcting existing tests", "skipTagFooter": false },
@@ -141,6 +146,8 @@ List of accepted commit tags.
         { "name": "refactor", "description": "A code change that neither fixes a bug nor adds a feature", "skipTagFooter": false },
         { "name": "ci", "description": "Changes to CI/CD configuration" },
         { "name": "chore", "description": "Changes to the build process or auxiliary tools and libraries such as documentation generation" }
+        { "name": "revert", "description": "Reverts a previous commit" }
+        { "name": "build", "description": "Changes that affect the build system or external dependencies" }
     ],
     "tags": [
         "cli",

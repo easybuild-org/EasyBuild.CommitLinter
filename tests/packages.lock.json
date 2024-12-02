@@ -13,9 +13,9 @@
       },
       "EasyBuild.CommitParser": {
         "type": "Direct",
-        "requested": "[2.2.0, )",
-        "resolved": "2.2.0",
-        "contentHash": "z1QkAQNjqJqiwgGK2u90R4rYsJuQsS2JnPMB0I0M/m2kfKVcr8WOynHQjf0CZ+9uCoQgIn3IXy0LkjLa63m4RA==",
+        "requested": "[3.0.0, )",
+        "resolved": "3.0.0",
+        "contentHash": "4N8zQ3nXEdmsp8txFrrxz2SbB6ZCQ6/OYDdgrU8G9brUY17s6DYEkPL0tnWdGfjDPufBPO3Uvz4yIB8HonkY4w==",
         "dependencies": {
           "FSharp.Core": "7.0.300",
           "FsToolkit.ErrorHandling": "4.18.0",
@@ -188,7 +188,7 @@
       "easybuild.commitlinter": {
         "type": "Project",
         "dependencies": {
-          "EasyBuild.CommitParser": "[2.2.0, )",
+          "EasyBuild.CommitParser": "[3.0.0, )",
           "FSharp.Core": "[7.0.300, )",
           "Spectre.Console.Cli": "[0.49.0, )",
           "Thoth.Json.Newtonsoft": "[0.1.0, )"
