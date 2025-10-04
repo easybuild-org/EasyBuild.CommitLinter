@@ -42,6 +42,11 @@ OPTIONS:
 If you are using [Husky](https://alirezanet.github.io/Husky.Net/), you can register the CLI as a `commit-msg` hook to validate your commit messages by running:
 
 ```bash
+# Setup Husky (if needed)
+dotnet tool install Husky  
+dotnet husky install
+
+# Register hooks
 dotnet husky add commit-msg -c 'dotnet commit-linter "$1"'
 # $1 is provided by Husky and contains the path to the commit message file
 ```
